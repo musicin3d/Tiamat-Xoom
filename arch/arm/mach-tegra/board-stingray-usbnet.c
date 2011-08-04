@@ -845,7 +845,7 @@ static int usbnet_probe(struct platform_device *pdev)
 {
 	pr_info("usbnet_probe\n");
 	/* do not register our function unless our platform device was registered */
-	android_register_function(&usbnet_function);
+//	android_register_function(&usbnet_function);
 	return 0;
 }
 
