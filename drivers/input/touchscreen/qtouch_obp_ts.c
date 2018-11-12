@@ -3,6 +3,7 @@
  *
  * Copyright (C) 2009 Google, Inc.
  * Copyright (C) 2009-2010 Motorola, Inc.
+ * Copyright (C) 2011 Lilstevie
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -896,8 +897,18 @@ static int do_touch_multi_msg(struct qtouch_ts_data *ts, struct qtm_object *obj,
 				 ts->finger_data[i].vector);
 		input_report_abs(ts->input_dev, ABS_MT_TRACKING_ID,
 				 i);
+        
+            input_report_abs(ts->input_dev, ABS_X, ts->finger_data[i].x_data);
+            input_report_abs(ts->input_dev, ABS_Y, ts->finger_data[i].y_data);
+            if(down == 1){
+                input_report_key(ts->input_dev, BTN_TOUCH, 1);
+            }else{
+                input_report_key(ts->input_dev, BTN_TOUCH, 0);
+            }
+        
 		input_mt_sync(ts->input_dev);
 	}
+    
 	input_sync(ts->input_dev);
 
 	if (!down) {
@@ -1086,7 +1097,6 @@ static int qtouch_ts_register_input(struct qtouch_ts_data *ts)
 		set_bit(EV_ABS, ts->input_dev->evbit);
 		/* Legacy support for testing only */
 		input_set_capability(ts->input_dev, EV_KEY, BTN_TOUCH);
-		input_set_capability(ts->input_dev, EV_KEY, BTN_2);
 		input_set_abs_params(ts->input_dev, ABS_X,
 				     ts->pdata->abs_min_x, ts->pdata->abs_max_x,
 				     ts->pdata->fuzz_x, 0);
